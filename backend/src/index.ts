@@ -1,13 +1,8 @@
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
+import { App } from "./core/app";
+import { AuthController } from "./modules/auth/controller";
 
-const app = new Hono();
+const app = new App([
+	new AuthController(), // auth
+]);
 
-app.get("/", (c) => {
-	return c.text("Hello Hono!");
-});
-
-serve({
-	fetch: app.fetch,
-	port: 3000,
-});
+app.listen(3000);
