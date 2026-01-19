@@ -1,12 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Route, Routes } from "react-router";
+import { IndexPage } from "./pages/index-page";
+import "./index.css";
 
 // biome-ignore lint/style/noNonNullAssertion: we know it exists for sure
-createRoot(document.querySelector('#root')!).render(
-  <StrictMode>
-    <div>
-      <h1>Hello, World!</h1>
-    </div>
-  </StrictMode>,
-)
+createRoot(document.querySelector("#root")!).render(
+	<StrictMode>
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<IndexPage />} />
+			</Routes>
+		</BrowserRouter>
+	</StrictMode>,
+);
