@@ -12,7 +12,7 @@ export type UpdateUserDTO = {
   password?: string;
 };
 
-export type LoginApiResponseDTO = {
+export type LoginResDTO = {
   user: {
     id: string;
     username: string;
@@ -23,7 +23,7 @@ export type LoginApiResponseDTO = {
   token: string;
 };
 
-export type RegisterApiResponseDTO = {
+export type RegisterRDTO = {
   user: {
     id: string;
     username: string;
@@ -34,10 +34,21 @@ export type RegisterApiResponseDTO = {
   token: string;
 };
 
-export type GetCurrentUserApiResponseDTO = {
+export type GetCurrentUserRDTO = {
   currentUser: JWTPayload & {
     id: string;
     username: string;
     email: string;
+  };
+};
+
+export type UpdateCurrentUserRDTO = {
+  user: {
+    email: string;
+    password: string;
+    username: string;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
   };
 };

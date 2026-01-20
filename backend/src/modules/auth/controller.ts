@@ -2,7 +2,7 @@ import { compare, hash } from "bcrypt";
 import { z } from "zod";
 import { AbstractController } from "../../core/controller";
 import type { CurrentUser } from "../../types";
-import type { GetCurrentUserApiResponseDTO, LoginApiResponseDTO, RegisterApiResponseDTO } from "./dto";
+import type { GetCurrentUserRDTO, LoginResDTO, RegisterRDTO, UpdateCurrentUserRDTO } from "./dto";
 import { AuthService } from "./service";
 
 export class AuthController extends AbstractController {
@@ -20,6 +20,11 @@ export class AuthController extends AbstractController {
       email: z.email(),
       password: z.string().min(8),
     }),
+    update: z.object({
+      username: z.string().optional(),
+      email: z.email().optional(),
+      password: z.string().min(8).optional(),
+    }),
   };
 
   public mount() {
@@ -34,7 +39,7 @@ export class AuthController extends AbstractController {
         username: user.username,
         email: user.email,
       });
-      return this.ok<LoginApiResponseDTO>(c, {
+      return this.ok<LoginResDTO>(c, {
         user: {
           id: user.id,
           username: user.username,
@@ -61,7 +66,7 @@ export class AuthController extends AbstractController {
         username: user.username,
         email: user.email,
       });
-      return this.ok<RegisterApiResponseDTO>(c, {
+      return this.ok<RegisterRDTO>(c, {
         user: {
           id: user.id,
           username: user.username,
@@ -75,8 +80,24 @@ export class AuthController extends AbstractController {
 
     this.router.get("/me", this.middleware, async (c) => {
       const currentUser = c.get("currentUser");
-      return this.ok<GetCurrentUserApiResponseDTO>(c, {
-        currentUser,
+      const user = await this.service.getUserById(currentUser.id);
+      if (!user) return this.fail(c, { server: ["User not found"] });
+      return this.ok<GetCurrentUserRDTO>(c, {
+        currentUser: {
+          id: user?.id,
+          username: user?.username,
+          email: user?.email,
+          exp: currentUser.exp,
+        },
+      });
+    });
+
+    this.router.patch("/update", this.validateUsing(this.schemas.update), this.middleware, async (c) => {
+      const currentUser = c.get("currentUser");
+      const data = c.req.valid("json");
+      const result = await this.service.updateUser(currentUser.id, data);
+      return this.ok<UpdateCurrentUserRDTO>(c, {
+        user: result,
       });
     });
   }
