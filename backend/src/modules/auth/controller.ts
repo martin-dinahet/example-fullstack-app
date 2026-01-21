@@ -2,7 +2,13 @@ import { compare, hash } from "bcrypt";
 import { z } from "zod";
 import { AbstractController } from "../../core/controller";
 import type { CurrentUser } from "../../types";
-import type { GetCurrentUserResponse, LoginResponse, RegisterResponse, UpdateCurrentUserResponse } from "./responses";
+import type {
+  DeleteCurrentUserResponse,
+  GetCurrentUserResponse,
+  LoginResponse,
+  RegisterResponse,
+  UpdateCurrentUserResponse,
+} from "./responses";
 import { AuthService } from "./service";
 
 export class AuthController extends AbstractController {
@@ -97,6 +103,14 @@ export class AuthController extends AbstractController {
       const data = c.req.valid("json");
       const result = await this.service.updateUser(currentUser.id, data);
       return this.ok<UpdateCurrentUserResponse>(c, {
+        user: result,
+      });
+    });
+
+    this.router.delete("/delete", this.middleware, async (c) => {
+      const currentUser = c.get("currentUser");
+      const result = await this.service.deleteUser(currentUser.id);
+      return this.ok<DeleteCurrentUserResponse>(c, {
         user: result,
       });
     });

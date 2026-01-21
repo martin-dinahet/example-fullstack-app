@@ -41,3 +41,14 @@ export type UpdateCurrentUserResponse = ApiResponse<{
     updatedAt: Date;
   };
 }>;
+
+export type DeleteCurrentUserResponse = ApiResponse<{
+  user: {
+    email: string;
+    password: string;
+    username: string;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+}>;
