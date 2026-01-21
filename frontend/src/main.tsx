@@ -6,11 +6,11 @@ import "./index.css";
 
 // biome-ignore lint/style/noNonNullAssertion: we know it exists for sure
 createRoot(document.querySelector("#root")!).render(
-	<StrictMode>
-		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<IndexPage />} />
-			</Routes>
-		</BrowserRouter>
-	</StrictMode>,
+  <StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<IndexPage />} />
+      </Routes>
+    </BrowserRouter>
+  </StrictMode>,
 );

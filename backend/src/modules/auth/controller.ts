@@ -98,7 +98,7 @@ export class AuthController extends AbstractController {
       });
     });
 
-    this.router.patch("/update", this.validateUsing(this.schemas.update), this.middleware, async (c) => {
+    this.router.patch("/me", this.validateUsing(this.schemas.update), this.middleware, async (c) => {
       const currentUser = c.get("currentUser");
       const data = c.req.valid("json");
       const result = await this.service.updateUser(currentUser.id, data);
@@ -107,7 +107,7 @@ export class AuthController extends AbstractController {
       });
     });
 
-    this.router.delete("/delete", this.middleware, async (c) => {
+    this.router.delete("/me", this.middleware, async (c) => {
       const currentUser = c.get("currentUser");
       const result = await this.service.deleteUser(currentUser.id);
       return this.ok<DeleteCurrentUserResponse>(c, {
