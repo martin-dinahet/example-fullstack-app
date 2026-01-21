@@ -2,7 +2,7 @@ import { compare, hash } from "bcrypt";
 import { z } from "zod";
 import { AbstractController } from "../../core/controller";
 import type { CurrentUser } from "../../types";
-import type { GetCurrentUserRDTO, LoginResDTO, RegisterRDTO, UpdateCurrentUserRDTO } from "./dto";
+import type { GetCurrentUserResponse, LoginResponse, RegisterResponse, UpdateCurrentUserResponse } from "./responses";
 import { AuthService } from "./service";
 
 export class AuthController extends AbstractController {
@@ -39,7 +39,7 @@ export class AuthController extends AbstractController {
         username: user.username,
         email: user.email,
       });
-      return this.ok<LoginResDTO>(c, {
+      return this.ok<LoginResponse>(c, {
         user: {
           id: user.id,
           username: user.username,
@@ -66,7 +66,7 @@ export class AuthController extends AbstractController {
         username: user.username,
         email: user.email,
       });
-      return this.ok<RegisterRDTO>(c, {
+      return this.ok<RegisterResponse>(c, {
         user: {
           id: user.id,
           username: user.username,
@@ -82,7 +82,7 @@ export class AuthController extends AbstractController {
       const currentUser = c.get("currentUser");
       const user = await this.service.getUserById(currentUser.id);
       if (!user) return this.fail(c, { server: ["User not found"] });
-      return this.ok<GetCurrentUserRDTO>(c, {
+      return this.ok<GetCurrentUserResponse>(c, {
         currentUser: {
           id: user?.id,
           username: user?.username,
@@ -96,7 +96,7 @@ export class AuthController extends AbstractController {
       const currentUser = c.get("currentUser");
       const data = c.req.valid("json");
       const result = await this.service.updateUser(currentUser.id, data);
-      return this.ok<UpdateCurrentUserRDTO>(c, {
+      return this.ok<UpdateCurrentUserResponse>(c, {
         user: result,
       });
     });

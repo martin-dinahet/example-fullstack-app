@@ -4,14 +4,14 @@ import { createMiddleware } from "hono/factory";
 import { sign, verify } from "hono/jwt";
 import type { z } from "zod";
 import type { AppVariables, CurrentUser } from "../types";
-import type { ErrorResponse, SuccessResponse } from "./response";
+import type { ApiResponse, ErrorResponse, SuccessOf, SuccessResponse } from "./response";
 
 export abstract class AbstractController {
   public router = new Hono<{ Variables: AppVariables }>();
   public abstract path: string;
 
-  protected ok<T>(c: Context, data: T) {
-    return c.json<SuccessResponse<T>>({ success: true, data: data }, 200);
+  protected ok<T extends ApiResponse<unknown>>(c: Context, data: SuccessOf<T>) {
+    return c.json<SuccessResponse<SuccessOf<T>>>({ success: true, data: data }, 200);
   }
 
   protected fail(c: Context, fields: Record<string, string[]>) {

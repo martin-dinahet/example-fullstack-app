@@ -1,7 +1,43 @@
+import type { JWTPayload } from "hono/utils/jwt/types";
 import type { ApiResponse } from "../../core/response";
-import type { GetCurrentUserRDTO, LoginResDTO, RegisterRDTO, UpdateCurrentUserRDTO } from "./dto";
 
-export type LoginResponse = ApiResponse<LoginResDTO>;
-export type RegisterResponse = ApiResponse<RegisterRDTO>;
-export type GetCurrentUserResponse = ApiResponse<GetCurrentUserRDTO>;
-export type UpdateCurrentUserResponse = ApiResponse<UpdateCurrentUserRDTO>;
+export type LoginResponse = ApiResponse<{
+  token: string;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}>;
+
+export type RegisterResponse = ApiResponse<{
+  token: string;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}>;
+
+export type GetCurrentUserResponse = ApiResponse<{
+  currentUser: JWTPayload & {
+    id: string;
+    username: string;
+    email: string;
+  };
+}>;
+
+export type UpdateCurrentUserResponse = ApiResponse<{
+  user: {
+    email: string;
+    password: string;
+    username: string;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+}>;
