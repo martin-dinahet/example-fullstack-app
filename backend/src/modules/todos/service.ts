@@ -1,5 +1,5 @@
 import { prisma } from "../../prisma";
-import type { CreateTodoDTO } from "./dto";
+import type { CreateTodoDTO, UpdateTodoDTO } from "./dto";
 
 export class TodosService {
   public async getAllTodos() {
@@ -18,7 +18,11 @@ export class TodosService {
     return await prisma.todo.findUnique({ where: { id, userId } });
   }
 
-  public async createTodo(data: CreateTodoDTO) {
-    return await prisma.todo.create({ data });
+  public async createTodo(userId: string, data: CreateTodoDTO) {
+    return await prisma.todo.create({ data: { userId, ...data } });
+  }
+
+  public async updateTodo(id: string, userId: string, data: UpdateTodoDTO) {
+    return await prisma.todo.update({ where: { id, userId }, data });
   }
 }

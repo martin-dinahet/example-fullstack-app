@@ -1,4 +1,10 @@
+import type { TodoStatus } from "../../generated/prisma/client";
+
 export type CreateTodoDTO = {
-  userId: string;
   title: string;
+};
+
+export type UpdateTodoDTO = {
+  title?: string;
+  completed?: TodoStatus;
 };
