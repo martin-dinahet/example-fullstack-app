@@ -8,3 +8,7 @@ export type GetAllTodosResponse = ApiResponse<{
 export type CreateTodoResponse = ApiResponse<{
   todo: Todo;
 }>;
+
+export type GetTodoByIdResponse = ApiResponse<{
+  todo: Todo | null;
+}>;

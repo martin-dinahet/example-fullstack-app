@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { AbstractController } from "../../core/controller";
-import type { CreateTodoResponse, GetAllTodosResponse } from "./responses";
+import type { CreateTodoResponse, GetAllTodosResponse, GetTodoByIdResponse } from "./responses";
 import { TodosService } from "./service";
 
 export class TodosController extends AbstractController {
@@ -16,7 +16,8 @@ export class TodosController extends AbstractController {
 
   public mount() {
     this.router.get("/", this.middleware, async (c) => {
-      const result = await this.service.getAllTodos();
+      const currentUser = c.get("currentUser");
+      const result = await this.service.getAllTodosForUser(currentUser.id);
       return this.ok<GetAllTodosResponse>(c, { todos: result });
     });
 
@@ -25,6 +26,13 @@ export class TodosController extends AbstractController {
       const currentUser = c.get("currentUser");
       const result = await this.service.createTodo({ title: data.title, userId: currentUser.id });
       return this.ok<CreateTodoResponse>(c, { todo: result });
+    });
+
+    this.router.get("/:id", this.middleware, async (c) => {
+      const id = c.req.param("id");
+      const currentUser = c.get("currentUser");
+      const result = await this.service.getTodoByIdForUser(id, currentUser.id);
+      return this.ok<GetTodoByIdResponse>(c, { todo: result });
     });
   }
 }
