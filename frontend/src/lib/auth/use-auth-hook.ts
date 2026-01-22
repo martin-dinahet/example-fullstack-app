@@ -6,6 +6,7 @@ import type {
   DeleteCurrentUserResponse,
   GetCurrentUserResponse,
   LoginResponse,
+  RefreshTokenResponse,
   RegisterResponse,
   UpdateCurrentUserResponse,
 } from "./types";
@@ -69,5 +70,14 @@ export function useAuth() {
     },
   });
 
-  return { currentUser, isLoading, loginMutation, registerMutation, updateMutation, deleteMutation };
+  const refreshMutation = useMutation({
+    mutationFn: () => {
+      return api("/auth/refresh", { method: "GET" });
+    },
+    onSuccess: (response: SuccessOf<RefreshTokenResponse>) => {
+      localStorage.setItem("token", response.token);
+    },
+  });
+
+  return { currentUser, isLoading, loginMutation, registerMutation, updateMutation, deleteMutation, refreshMutation };
 }

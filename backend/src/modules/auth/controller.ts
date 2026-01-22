@@ -143,7 +143,7 @@ export class AuthController extends AbstractController {
       });
     });
 
-    this.router.post("/refresh", this.middleware, async (c) => {
+    this.router.get("/refresh", this.middleware, async (c) => {
       const currentUser = c.get("currentUser");
       const user = await this.service.getUserById(currentUser.id);
       if (!user) return this.fail(c, { server: ["User not found"] });
