@@ -1,4 +1,4 @@
-import type { ApiResponse } from "../../core/response";
+import type { ApiResponse } from "../types";
 
 export type JWTPayload = {
   [key: string]: unknown;
