@@ -51,3 +51,7 @@ export type DeleteCurrentUserResponse = ApiResponse<{
     updatedAt: Date;
   };
 }>;
+
+export type RefreshTokenResponse = ApiResponse<{
+  token: string;
+}>;

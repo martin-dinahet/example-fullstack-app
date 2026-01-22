@@ -7,6 +7,7 @@ import type {
   DeleteCurrentUserResponse,
   GetCurrentUserResponse,
   LoginResponse,
+  RefreshTokenResponse,
   RegisterResponse,
   UpdateCurrentUserResponse,
 } from "./responses";
@@ -45,6 +46,8 @@ export class AuthController extends AbstractController {
         id: user.id,
         username: user.username,
         email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       });
       return this.ok<LoginResponse>(c, {
         user: {
@@ -72,6 +75,8 @@ export class AuthController extends AbstractController {
         id: user.id,
         username: user.username,
         email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       });
       return this.ok<RegisterResponse>(c, {
         user: {
@@ -136,6 +141,20 @@ export class AuthController extends AbstractController {
       return this.ok<DeleteCurrentUserResponse>(c, {
         user: result,
       });
+    });
+
+    this.router.post("/refresh", this.middleware, async (c) => {
+      const currentUser = c.get("currentUser");
+      const user = await this.service.getUserById(currentUser.id);
+      if (!user) return this.fail(c, { server: ["User not found"] });
+      const token = await this.generateToken<CurrentUser>({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      });
+      return this.ok<RefreshTokenResponse>(c, { token });
     });
   }
 }
