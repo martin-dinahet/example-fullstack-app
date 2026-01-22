@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { IndexPage } from "./pages/index-page";
+import { RegisterPage } from "./pages/register-page";
 import "./index.css";
 
 const queryClient = new QueryClient();
@@ -14,6 +15,7 @@ createRoot(document.querySelector("#root")!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<IndexPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
