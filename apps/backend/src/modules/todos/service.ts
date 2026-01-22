@@ -1,5 +1,5 @@
+import type { CreateTodoDTO, UpdateTodoDTO } from "@repo/types";
 import { prisma } from "../../prisma";
-import type { CreateTodoDTO, UpdateTodoDTO } from "./dto";
 
 export class TodosService {
   public async getAllTodos() {

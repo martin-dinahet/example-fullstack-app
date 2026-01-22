@@ -1,8 +1,3 @@
-import { compare, hash } from "bcrypt";
-import { z } from "zod";
-import { AbstractController } from "../../core/controller";
-import type { CurrentUser } from "../../types";
-import type { UpdateUserDTO } from "./dto";
 import type {
   DeleteCurrentUserResponse,
   GetCurrentUserResponse,
@@ -10,7 +5,12 @@ import type {
   RefreshTokenResponse,
   RegisterResponse,
   UpdateCurrentUserResponse,
-} from "./responses";
+} from "@repo/types";
+import { compare, hash } from "bcrypt";
+import { z } from "zod";
+import { AbstractController } from "../../core/controller";
+import type { CurrentUser } from "../../types";
+import type { UpdateUserDTO } from "./dto";
 import { AuthService } from "./service";
 
 export class AuthController extends AbstractController {
