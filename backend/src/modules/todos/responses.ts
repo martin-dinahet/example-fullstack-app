@@ -1,0 +1,10 @@
+import type { ApiResponse } from "../../core/response";
+import type { Todo } from "../../generated/prisma/client";
+
+export type GetAllTodosResponse = ApiResponse<{
+  todos: Todo[];
+}>;
+
+export type CreateTodoResponse = ApiResponse<{
+  todo: Todo;
+}>;
