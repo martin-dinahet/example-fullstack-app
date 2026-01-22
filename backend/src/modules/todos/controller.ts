@@ -1,7 +1,13 @@
 import { z } from "zod";
 import { AbstractController } from "../../core/controller";
 import { TodoStatus } from "../../generated/prisma/enums";
-import type { CreateTodoResponse, GetAllTodosResponse, GetTodoByIdResponse, UpdateTodoResponse } from "./responses";
+import type {
+  CreateTodoResponse,
+  DeleteTodoResponse,
+  GetAllTodosResponse,
+  GetTodoByIdResponse,
+  UpdateTodoResponse,
+} from "./responses";
 import { TodosService } from "./service";
 
 export class TodosController extends AbstractController {
@@ -46,6 +52,13 @@ export class TodosController extends AbstractController {
       const currentUser = c.get("currentUser");
       const result = await this.service.updateTodo(id, currentUser.id, data);
       return this.ok<UpdateTodoResponse>(c, { todo: result });
+    });
+
+    this.router.delete("/:id", this.middleware, async (c) => {
+      const id = c.req.param("id");
+      const currentUser = c.get("currentUser");
+      const result = await this.service.deleteTodo(id, currentUser.id);
+      return this.ok<DeleteTodoResponse>(c, { todo: result });
     });
   }
 }

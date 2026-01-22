@@ -16,3 +16,7 @@ export type GetTodoByIdResponse = ApiResponse<{
 export type UpdateTodoResponse = ApiResponse<{
   todo: Todo;
 }>;
+
+export type DeleteTodoResponse = ApiResponse<{
+  todo: Todo;
+}>;

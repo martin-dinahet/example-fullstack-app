@@ -25,4 +25,8 @@ export class TodosService {
   public async updateTodo(id: string, userId: string, data: UpdateTodoDTO) {
     return await prisma.todo.update({ where: { id, userId }, data });
   }
+
+  public async deleteTodo(id: string, userId: string) {
+    return await prisma.todo.delete({ where: { id, userId } });
+  }
 }
