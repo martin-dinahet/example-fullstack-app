@@ -2,6 +2,7 @@ import { compare, hash } from "bcrypt";
 import { z } from "zod";
 import { AbstractController } from "../../core/controller";
 import type { CurrentUser } from "../../types";
+import type { UpdateUserDTO } from "./dto";
 import type {
   DeleteCurrentUserResponse,
   GetCurrentUserResponse,
@@ -101,9 +102,31 @@ export class AuthController extends AbstractController {
     this.router.patch("/me", this.validateUsing(this.schemas.update), this.middleware, async (c) => {
       const currentUser = c.get("currentUser");
       const data = c.req.valid("json");
-      const result = await this.service.updateUser(currentUser.id, data);
+      if (data.email && data.email !== currentUser.email) {
+        const existingUser = await this.service.getUserByEmail(data.email);
+        if (existingUser) return this.fail(c, { email: ["Email already in use"] });
+      }
+      const updateData: UpdateUserDTO = {};
+      if (data.username) updateData.username = data.username;
+      if (data.email) updateData.email = data.email;
+      if (data.password) updateData.password = await hash(data.password, 12);
+      const result = await this.service.updateUser(currentUser.id, updateData);
+      const token = await this.generateToken<CurrentUser>({
+        id: result.id,
+        username: result.username,
+        email: result.email,
+        createdAt: result.createdAt,
+        updatedAt: result.updatedAt,
+      });
       return this.ok<UpdateCurrentUserResponse>(c, {
-        user: result,
+        token,
+        user: {
+          id: result.id,
+          username: result.username,
+          email: result.email,
+          createdAt: result.createdAt,
+          updatedAt: result.updatedAt,
+        },
       });
     });
 

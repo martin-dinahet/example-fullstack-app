@@ -32,9 +32,9 @@ export type GetCurrentUserResponse = ApiResponse<{
 }>;
 
 export type UpdateCurrentUserResponse = ApiResponse<{
+  token: string;
   user: {
     email: string;
-    password: string;
     username: string;
     id: string;
     createdAt: Date;
@@ -45,7 +45,6 @@ export type UpdateCurrentUserResponse = ApiResponse<{
 export type DeleteCurrentUserResponse = ApiResponse<{
   user: {
     email: string;
-    password: string;
     username: string;
     id: string;
     createdAt: Date;
