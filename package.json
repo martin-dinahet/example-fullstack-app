@@ -10,6 +10,7 @@
     "build:types": "pnpm --filter @repo/types build",
     "db:migrate": "pnpm --filter backend db:migrate",
     "db:generate": "pnpm --filter backend db:generate",
+    "db:studio": "pnpm --filter backend db:studio",
 
     "lint": "biome check --write",
     "format": "biome format --write"

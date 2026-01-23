@@ -33,6 +33,17 @@ export type UpdateTodoDTO = {
   completed?: TodoStatus;
 };
 
+export type LoginDTO = {
+  email: string;
+  password: string;
+};
+
+export type RegisterDTO = {
+  username: string;
+  email: string;
+  password: string;
+};
+
 export type JWTPayload = {
   [key: string]: unknown;
   exp?: number | undefined;

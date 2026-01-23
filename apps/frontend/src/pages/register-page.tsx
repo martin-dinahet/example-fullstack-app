@@ -17,6 +17,7 @@ export function RegisterPage() {
       password: "",
     },
     onSubmit: async ({ value }) => {
+      console.log(`submitting form with ${JSON.stringify(value)}`);
       await registerMutation.mutateAsync(value);
     },
   });

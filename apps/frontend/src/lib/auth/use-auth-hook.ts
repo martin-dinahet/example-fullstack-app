@@ -1,15 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../api";
-import type { SuccessOf } from "../types";
-import type { LoginDTO, RegisterDTO, UpdateUserDTO } from "./dto";
 import type {
   DeleteCurrentUserResponse,
   GetCurrentUserResponse,
+  LoginDTO,
   LoginResponse,
   RefreshTokenResponse,
+  RegisterDTO,
   RegisterResponse,
+  SuccessOf,
   UpdateCurrentUserResponse,
-} from "./types";
+  UpdateUserDTO,
+} from "@repo/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { api } from "../api";
 
 const authKeys = {
   currentUser: ["auth", "me"] as const,
