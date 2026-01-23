@@ -11,7 +11,7 @@ export abstract class AbstractController {
   public abstract path: string;
 
   protected ok<T extends ApiResponse<unknown>>(c: Context, data: SuccessOf<T>) {
-    return c.json<SuccessResponse<SuccessOf<T>>>({ success: true, data: data }, 200);
+    return c.json<SuccessResponse<SuccessOf<T>>>({ success: true, data }, 200);
   }
 
   protected fail(c: Context, fields: Record<string, string[]>) {
@@ -24,10 +24,12 @@ export abstract class AbstractController {
         const errors: Record<string, string[]> = {};
         result.error.issues.forEach((issue) => {
           const path = issue.path.join(".") || "root";
-          if (!errors[path]) errors[path] = [];
+          if (!errors[path]) {
+            errors[path] = [];
+          }
           errors[path].push(issue.message);
         });
-        return c.json({ success: false, errors: errors }, 401);
+        return c.json({ success: false, errors }, 401);
       }
     });
   }
@@ -35,9 +37,13 @@ export abstract class AbstractController {
   protected createAuthMiddleware() {
     return createMiddleware<{ Variables: AppVariables }>(async (c, next) => {
       const authHeader = c.req.header("Authorization");
-      if (!authHeader) return this.fail(c, { auth: ["Authorization header missing"] });
+      if (!authHeader) {
+        return this.fail(c, { auth: ["Authorization header missing"] });
+      }
       const token = authHeader.replace("Bearer ", "");
-      if (!token) return this.fail(c, { auth: ["Token missing"] });
+      if (!token) {
+        return this.fail(c, { auth: ["Token missing"] });
+      }
       try {
         const payload = await verify(token, String(process.env.JWT_SECRET), {
           alg: "HS256",

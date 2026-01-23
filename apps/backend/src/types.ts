@@ -8,6 +8,6 @@ export type CurrentUser = JWTPayload & {
   updatedAt: Date;
 };
 
-export type AppVariables = {
+export interface AppVariables {
   currentUser: CurrentUser;
-};
+}

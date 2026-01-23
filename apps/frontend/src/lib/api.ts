@@ -2,7 +2,9 @@ export async function api(endpoint: string, options: RequestInit = {}) {
   const token = localStorage.getItem("token");
   const headers = new Headers(options.headers);
   headers.set("Content-Type", "application/json");
-  if (token) headers.set("Authorization", `Bearer ${token}`);
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint.slice(1) : endpoint;
   const url = `/api/${cleanEndpoint}`;
   const response = await fetch(url, { ...options, headers });
@@ -14,6 +16,8 @@ export async function api(endpoint: string, options: RequestInit = {}) {
     return null;
   }
   const data = await response.json();
-  if (!response.ok) throw data;
+  if (!response.ok) {
+    throw data;
+  }
   return data;
 }

@@ -25,9 +25,13 @@ export function useAuth() {
     retry: false,
     queryFn: async () => {
       const token = localStorage.getItem("token");
-      if (!token) return null;
+      if (!token) {
+        return null;
+      }
       const response: GetCurrentUserResponse = await api("/auth/me");
-      if (!response.success) throw new Error("Failed to get current user");
+      if (!response.success) {
+        throw new Error("Failed to get current user");
+      }
       return response.data.currentUser;
     },
   });
@@ -44,7 +48,10 @@ export function useAuth() {
 
   const registerMutation = useMutation({
     mutationFn: (data: RegisterDTO) => {
-      return api("/auth/register", { method: "POST", body: JSON.stringify(data) });
+      return api("/auth/register", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: (response: SuccessOf<RegisterResponse>) => {
       localStorage.setItem("token", response.token);

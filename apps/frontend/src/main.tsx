@@ -14,8 +14,8 @@ createRoot(document.querySelector("#root")!).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<IndexPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route element={<IndexPage />} path="/" />
+          <Route element={<RegisterPage />} path="/register" />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

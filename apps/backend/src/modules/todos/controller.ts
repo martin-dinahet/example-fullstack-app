@@ -12,8 +12,8 @@ import { TodosService } from "./service";
 
 export class TodosController extends AbstractController {
   public path = "/todos";
-  private middleware = this.createAuthMiddleware();
-  private service = new TodosService();
+  private readonly middleware = this.createAuthMiddleware();
+  private readonly service = new TodosService();
 
   public schemas = {
     create: z.object({

@@ -15,10 +15,10 @@ import { AuthService } from "./service";
 
 export class AuthController extends AbstractController {
   public path = "/auth";
-  private service = new AuthService();
-  private middleware = this.createAuthMiddleware();
+  private readonly service = new AuthService();
+  private readonly middleware = this.createAuthMiddleware();
 
-  private schemas = {
+  private readonly schemas = {
     login: z.object({
       email: z.email(),
       password: z.string().min(8),
@@ -39,9 +39,13 @@ export class AuthController extends AbstractController {
     this.router.post("/login", this.validateUsing(this.schemas.login), async (c) => {
       const { email, password } = c.req.valid("json");
       const user = await this.service.getUserByEmail(email);
-      if (!user) return this.fail(c, { email: ["User not found"] });
+      if (!user) {
+        return this.fail(c, { email: ["User not found"] });
+      }
       const isValid = await compare(password, user.password);
-      if (!isValid) return this.fail(c, { password: ["Incorrect password"] });
+      if (!isValid) {
+        return this.fail(c, { password: ["Incorrect password"] });
+      }
       const token = await this.generateToken<CurrentUser>({
         id: user.id,
         username: user.username,
@@ -64,7 +68,9 @@ export class AuthController extends AbstractController {
     this.router.post("/register", this.validateUsing(this.schemas.register), async (c) => {
       const { username, email, password } = c.req.valid("json");
       const existingUser = await this.service.getUserByEmail(email);
-      if (existingUser) return this.fail(c, { email: ["Email already in use"] });
+      if (existingUser) {
+        return this.fail(c, { email: ["Email already in use"] });
+      }
       const hashedPassword = await hash(password, 12);
       const user = await this.service.createUser({
         username,
@@ -93,7 +99,9 @@ export class AuthController extends AbstractController {
     this.router.get("/me", this.middleware, async (c) => {
       const currentUser = c.get("currentUser");
       const user = await this.service.getUserById(currentUser.id);
-      if (!user) return this.fail(c, { server: ["User not found"] });
+      if (!user) {
+        return this.fail(c, { server: ["User not found"] });
+      }
       return this.ok<GetCurrentUserResponse>(c, {
         currentUser: {
           id: user?.id,
@@ -109,12 +117,20 @@ export class AuthController extends AbstractController {
       const data = c.req.valid("json");
       if (data.email && data.email !== currentUser.email) {
         const existingUser = await this.service.getUserByEmail(data.email);
-        if (existingUser) return this.fail(c, { email: ["Email already in use"] });
+        if (existingUser) {
+          return this.fail(c, { email: ["Email already in use"] });
+        }
       }
       const updateData: UpdateUserDTO = {};
-      if (data.username) updateData.username = data.username;
-      if (data.email) updateData.email = data.email;
-      if (data.password) updateData.password = await hash(data.password, 12);
+      if (data.username) {
+        updateData.username = data.username;
+      }
+      if (data.email) {
+        updateData.email = data.email;
+      }
+      if (data.password) {
+        updateData.password = await hash(data.password, 12);
+      }
       const result = await this.service.updateUser(currentUser.id, updateData);
       const token = await this.generateToken<CurrentUser>({
         id: result.id,
@@ -146,7 +162,9 @@ export class AuthController extends AbstractController {
     this.router.get("/refresh", this.middleware, async (c) => {
       const currentUser = c.get("currentUser");
       const user = await this.service.getUserById(currentUser.id);
-      if (!user) return this.fail(c, { server: ["User not found"] });
+      if (!user) {
+        return this.fail(c, { server: ["User not found"] });
+      }
       const token = await this.generateToken<CurrentUser>({
         id: user.id,
         username: user.username,

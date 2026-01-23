@@ -44,7 +44,7 @@ export class App {
       controller.mount();
       this.instance.route(controller.path, controller.router);
       console.log(`Mounted controller: ${controller.path}`);
-      console.log(`Routes:`);
+      console.log("Routes:");
       const seen = new Set<string>();
       controller.router.routes.forEach((route) => {
         const key = `${route.method} ${route.path}`;

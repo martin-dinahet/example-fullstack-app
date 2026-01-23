@@ -2,65 +2,65 @@ export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
 export type SuccessOf<T> = T extends SuccessResponse<infer Data> ? Data : never;
 export type ErrorOf<T> = T extends ErrorResponse | infer _ ? ErrorResponse["errors"] : never;
 
-export type SuccessResponse<T> = {
+export interface SuccessResponse<T> {
   success: true;
   data: T;
-};
+}
 
-export type ErrorResponse = {
+export interface ErrorResponse {
   success: false;
   errors: Record<string, string[]>;
-};
+}
 
-export type CreateUserDTO = {
+export interface CreateUserDTO {
   username: string;
   email: string;
   password: string;
-};
+}
 
-export type UpdateUserDTO = {
+export interface UpdateUserDTO {
   username?: string;
   email?: string;
   password?: string;
-};
+}
 
-export type CreateTodoDTO = {
+export interface CreateTodoDTO {
   title: string;
-};
+}
 
-export type UpdateTodoDTO = {
+export interface UpdateTodoDTO {
   title?: string;
   completed?: TodoStatus;
-};
+}
 
-export type LoginDTO = {
+export interface LoginDTO {
   email: string;
   password: string;
-};
+}
 
-export type RegisterDTO = {
+export interface RegisterDTO {
   username: string;
   email: string;
   password: string;
-};
+}
 
-export type JWTPayload = {
+export interface JWTPayload {
   [key: string]: unknown;
   exp?: number | undefined;
   nbf?: number | undefined;
   iat?: number | undefined;
   iss?: string | undefined;
   aud?: string | string[] | undefined;
-};
+}
 
-export type Todo = {
+export interface Todo {
   id: string;
   title: string;
   completed: TodoStatus;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 export type TodoStatus = "TODO" | "IN_PROGRESS" | "DONE";
 

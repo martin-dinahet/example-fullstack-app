@@ -1,11 +1,27 @@
+"use client";
+
 import { useForm } from "@tanstack/react-form";
-import { Loader } from "lucide-react";
+import { Loader, Lock, Mail, User } from "lucide-react";
+import type { ChangeEvent } from "react";
+import { z } from "zod";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "../components/ui/field";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../components/ui/input-group";
 import { useAuth } from "../lib/auth/use-auth-hook";
+
+const formSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username must be at most 20 characters"),
+  email: z.string().email("Please provide a valid email address"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(32, "Password must be at most 32 characters"),
+});
 
 export function RegisterPage() {
   const { registerMutation } = useAuth();
@@ -16,18 +32,20 @@ export function RegisterPage() {
       email: "",
       password: "",
     },
+    validators: {
+      onSubmit: formSchema,
+    },
     onSubmit: async ({ value }) => {
-      console.log(`submitting form with ${JSON.stringify(value)}`);
       await registerMutation.mutateAsync(value);
     },
   });
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-50 p-4">
+    <div className="grid min-h-screen w-screen place-items-center bg-muted/40 p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Register</CardTitle>
-          <CardDescription>Create your account to get started.</CardDescription>
+          <CardTitle>Create an account</CardTitle>
+          <CardDescription>Enter your information to get started</CardDescription>
         </CardHeader>
 
         <form
@@ -38,7 +56,6 @@ export function RegisterPage() {
           }}
         >
           <CardContent className="space-y-4">
-            {/* API Error Handling */}
             {registerMutation.isError && (
               <Alert variant="destructive">
                 <AlertDescription>
@@ -49,74 +66,88 @@ export function RegisterPage() {
               </Alert>
             )}
 
-            {/* Name Field */}
-            <form.Field name="username">
-              {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor={field.name}>Full Name</Label>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Jane Doe"
-                  />
-                </div>
-              )}
-            </form.Field>
+            <FieldGroup>
+              <form.Field
+                name="username"
+                children={(field) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>Username</FieldLabel>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <User className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        id={field.name}
+                        placeholder="janesmith"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
+                      />
+                    </InputGroup>
+                    <FieldDescription>Your public display name.</FieldDescription>
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              />
 
-            {/* Email Field */}
-            <form.Field name="email">
-              {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor={field.name}>Email</Label>
-                  <Input
-                    id={field.name}
-                    type="email"
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="hello@example.com"
-                  />
-                </div>
-              )}
-            </form.Field>
+              <form.Field
+                name="email"
+                children={(field) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Mail className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        id={field.name}
+                        type="email"
+                        placeholder="m@example.com"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
+                      />
+                    </InputGroup>
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              />
 
-            {/* Password Field */}
-            <form.Field name="password">
-              {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor={field.name}>Password</Label>
-                  <Input
-                    id={field.name}
-                    type="password"
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </form.Field>
+              <form.Field
+                name="password"
+                children={(field) => (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Lock className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        id={field.name}
+                        type="password"
+                        placeholder="••••••••"
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
+                      />
+                    </InputGroup>
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              />
+            </FieldGroup>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
-              {registerMutation.isPending ? (
-                <>
-                  <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  Creating account...
-                </>
-              ) : (
-                "Register"
-              )}
+              {registerMutation.isPending && <Loader className="size-4 animate-spin" />}
+              Create account
             </Button>
-            <p className="text-sm text-center text-muted-foreground">
+
+            <p className="text-muted-foreground text-sm">
               Already have an account?{" "}
-              <a href="/login" className="font-medium text-primary hover:underline">
-                Log in
+              <a href="/login" className="text-primary underline-offset-4 hover:underline">
+                Sign in
               </a>
             </p>
           </CardFooter>
